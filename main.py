@@ -23,7 +23,7 @@ def points_lines_shapes(mapping):
     #points = ''
     #lines = ''
     #shapes = '' 
-    Points = []
+    Points = [] 
     Lines = []
     Shapes = []
     for key in mapping:
