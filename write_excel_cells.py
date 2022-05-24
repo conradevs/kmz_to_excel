@@ -1,38 +1,79 @@
+import sys
+from zipfile import ZipFile
+import xml.sax, xml.sax.handler
+from kmzHandler import PlacemarkHandler
+from string_to_objects import points_lines_shapes
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import numbers, is_date_format
-from openpyxl.styles.styleable import StyleableObject
-from openpyxl.worksheet.hyperlink import Hyperlink
 from helpers import letter
 
 def excel_fill(ws,points,lines,shapes):
     index=1
     ws['A'+str(index)].value = 'Points'
     index=index+1
+    print('index before points: '+str(index))
     for i in range(0,len(points)):
         ws['A'+str(index+i)].value = points[i].name
         ws['B'+str(index+i)].value = points[i].coord_x
         ws['c'+str(index+i)].value = points[i].coord_y
         ws['D'+str(index+i)].value = points[i].coord_z
     index=index+len(points)
-    #ws['A'+str(index)].value = 'Lines'
-    #for line in lines:
-    #    ws['A'+str(index+i)].value = lines[i].name
-    #    for j in range(1,len(line.points)):
-    #        ws[letter(j)+str(index+i)].value = line.points[j].name
-    #        ws[letter(j+1)+str(index+i)].value = line.points[j+1].coord_x
-    #        ws[letter(j+2)+str(index+i)].value = line.points[j+2].coord_y
-    #        j=+3
-    #        if j>=len(lines[i].points)-1: break
-    #index=index+len(lines)
-    #ws['A'+str(index)].value = 'Shapes'
-    #for i in range(0,len(shapes)-1):
-    #    ws['A'+str(index+i)].value = shapes[i].name
-    #    for j in range(1,len(lines[i].points)):
-    #        ws[letter(j)+str(index+i)].value = shapes[i].points[j]
-    #        ws[letter(j+1)+str(index+i)].value = shapes[i].points[j+1]
-    #        ws[letter(j+2)+str(index+i)].value = shapes[i].points[j+2]
-    #        j=+3
-    #        if j>=len(lines[i].points)-1: break
+    print('index after points: '+str(index))
+    ws['A'+str(index)].value = 'Lines'
+    index=index+1
+    for i in range(0,len(lines)):
+        print(lines[i].name)
+        ws['A'+str(index+i)].value = lines[i].name
+        for j in range(1,len(lines[i].points)):
+            k=3*(j-1)+1
+            if j>=len(lines[i].points): break
+            print("["+letter(k+1)+"],["+letter(k+2)+"],["+letter(k+3)+"]")
+            ws[letter(k+1)+str(index+i)].value = lines[i].points[j-1].name
+            ws[letter(k+2)+str(index+i)].value = lines[i].points[j-1].coord_x
+            ws[letter(k+3)+str(index+i)].value = lines[i].points[j-1].coord_y
             
+            #
+    index=index+len(lines)
+    print('index after points: '+str(index))
+    ws['A'+str(index)].value = 'Shapes'
+    index=index+1
+    for i in range(0,len(shapes)):
+        print(shapes[i].name)
+        ws['A'+str(index+i)].value = shapes[i].name
+        for j in range(1,len(shapes[i].points)):
+            k=3*(j-1)+1
+            if j>=len(shapes[i].points): break
+            print("["+letter(k+1)+"],["+letter(k+2)+"],["+letter(k+3)+"]")
+            ws[letter(k+1)+str(index+i)].value = shapes[i].points[j-1].name
+            ws[letter(k+2)+str(index+i)].value = shapes[i].points[j-1].coord_x
+            ws[letter(k+3)+str(index+i)].value = shapes[i].points[j-1].coord_y
+            
+def convert_file(file_path_label,output_directory_path_label):
+    print(file_path_label.cget('text'))
+    file = file_path_label.cget('text')
+    print(output_directory_path_label.cget('text'))
+    output_directory = output_directory_path_label.cget('text')
+    kmz = ZipFile(file, 'r')
+    kml = kmz.open('doc.kml', 'r')
+
+    parser = xml.sax.make_parser()
+    handler = PlacemarkHandler()
+    parser.setContentHandler(handler)
+    parser.parse(kml)
+    kmz.close()
+
+    output = points_lines_shapes(handler.mapping)
+
+    # Create xlsx file
+    wb = Workbook()
+    #select active tab
+    ws =  wb.active
+    # name it "COORDENADAS"
+    ws.title = "COORDENADAS"
+    # call excel cells writing function
+    excel_fill(ws,output[0],output[1],output[2])
+    # output xlsx file same name as kmz file
+    out_filename = file.split('/')[-1]
+    out_filename = out_filename.split('/')[0]
+    out_filename = output_directory + out_filename + ".xlsx"
+    # save output file
+    wb.save(filename = out_filename)
