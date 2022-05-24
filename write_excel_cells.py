@@ -16,6 +16,7 @@ def excel_fill(ws,points,lines,shapes):
         ws['B'+str(index+i)].value = points[i].coord_x
         ws['c'+str(index+i)].value = points[i].coord_y
         ws['D'+str(index+i)].value = points[i].coord_z
+        ws['F'+str(index+i)].value = "S" + points[i].coord_y[1:10] + "° " + "W"+points[i].coord_x[1:10] + "°"
     index=index+len(points)
     print('index after points: '+str(index))
     ws['A'+str(index)].value = 'Lines'
@@ -46,8 +47,10 @@ def excel_fill(ws,points,lines,shapes):
             ws[letter(k+1)+str(index+i)].value = shapes[i].points[j-1].name
             ws[letter(k+2)+str(index+i)].value = shapes[i].points[j-1].coord_x
             ws[letter(k+3)+str(index+i)].value = shapes[i].points[j-1].coord_y
+
             
 def convert_file(file_path_label,output_directory_path_label):
+
     print(file_path_label.cget('text'))
     file = file_path_label.cget('text')
     print(output_directory_path_label.cget('text'))
@@ -73,7 +76,8 @@ def convert_file(file_path_label,output_directory_path_label):
     excel_fill(ws,output[0],output[1],output[2])
     # output xlsx file same name as kmz file
     out_filename = file.split('/')[-1]
-    out_filename = out_filename.split('/')[0]
-    out_filename = output_directory + out_filename + ".xlsx"
+    out_filename = out_filename.split('.')[0]
+    out_filename = output_directory + "/" +out_filename + ".xlsx"
+    print(out_filename)
     # save output file
     wb.save(filename = out_filename)

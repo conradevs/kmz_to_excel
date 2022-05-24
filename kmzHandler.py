@@ -1,11 +1,6 @@
 from zipfile import ZipFile
-
-filename = 'test.kmz'
-
-kmz = ZipFile(filename, 'r')
-kml = kmz.open('doc.kml', 'r')
-
 import xml.sax, xml.sax.handler
+
 
 class PlacemarkHandler(xml.sax.handler.ContentHandler):
     def __init__(self):
