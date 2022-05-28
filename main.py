@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import filedialog as fd
-from string_to_objects import points_lines_shapes
 from write_excel_cells import convert_file
 
 #main window
