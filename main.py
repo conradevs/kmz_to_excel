@@ -43,6 +43,7 @@ print(label_path_picker.cget('text'))
 
 button_convert = Button(main_labelframe,text="Convertir",command=lambda:convert_file(label_file_picker,label_path_picker))
 button_convert.pack(expand=True)
+button_convert = Button(main_labelframe,text="Convertir",command=lambda:coordinates_from_Autocad())
 root.mainloop()
 
 
