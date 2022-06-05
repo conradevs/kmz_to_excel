@@ -50,14 +50,14 @@ def excel_fill(ws,points,lines,shapes):
 
 
 def bdi_ws_fill(ws,point_data):
-    sorted_points = sorted(point_data, reverse=False,key=lambda point: point.name)
+    ##sorted_points = sorted(point_data, reverse=False,key=lambda point: point.name)
     index=1
     ws['A'+str(index)].value = 'Points'
     index=index+1
     # print('index before points: '+str(index))
-    for i in range(0,len(sorted_points)):
-        ws['A'+str(index+i)].value = sorted_points[i].name
-        ws['B'+str(index+i)].value = "S" + sorted_points[i].coord_y[1:10] + "° " + "W"+sorted_points[i].coord_x[1:10] + "°"    
+    for i in range(0,len(point_data)):
+        ws['A'+str(index+i)].value = point_data[i].name
+        ws['B'+str(index+i)].value = "S" + point_data[i].coord_y[1:10] + "° " + "W"+point_data[i].coord_x[1:10] + "°"    
 
 def convert_file(file_path_label,output_directory_path_label):
 

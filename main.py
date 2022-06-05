@@ -1,6 +1,8 @@
+
 from tkinter import *
 from tkinter import filedialog as fd
-from write_excel_cells import convert_file
+from write_excel_cells import convert_file, bdi_ws_fill
+from CAD_drawing_open import coordinates_from_Autocad, save_in_excel_file
 
 #main window
 root =Tk()
@@ -43,9 +45,16 @@ print(label_path_picker.cget('text'))
 
 button_convert = Button(main_labelframe,text="Convertir",command=lambda:convert_file(label_file_picker,label_path_picker))
 button_convert.pack(expand=True)
-button_convert = Button(main_labelframe,text="Convertir",command=lambda:coordinates_from_Autocad())
+
+def on_click_button_acad(excel_book_path):
+    if excel_book_path == 'Elegir directorio...': 
+        print('Elige directorio donde guardar resultados')
+        return
+    coord_list = coordinates_from_Autocad(21,False)
+    save_in_excel_file("ACAD_Output",excel_book_path,coord_list)
+
+
+button_convert_from_ACAD = Button(main_labelframe,text="Extraer desde ACAD",command=lambda:on_click_button_acad(label_path_picker.cget('text')))
+button_convert_from_ACAD.pack(expand=True)
 root.mainloop()
-
-
-
 
