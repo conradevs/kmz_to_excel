@@ -1,11 +1,12 @@
 import sys
+from numpy import array
 sys.path.append('../')
 from pyautocad import ACAD, Autocad, APoint, aDouble
 from comtypes import *
 from comtypes.client import CreateObject
 from comtypes import COMError
 from openpyxl import Workbook
-
+import array
 
 acad = Autocad(create_if_not_exists=True)
 doc = acad.ActiveDocument
@@ -19,15 +20,36 @@ point_1 = APoint(0.0,0.0,0.0)
 point_2 = acad.ActiveDocument.Utility.GetPoint(point_1,prompt1)
 print(point_2)
 #point_1 = APoint(0.0,0.0,0.0)
-ssetObj = doc.SelectionSets.Add("New_SelectionSet")
+ssetObj = acad.ActiveDocument.SelectionSets.Item("New_")
 print(ssetObj.Name)
-#polygon = list()
-#polygon.append(set[0] + APoint(-20.0,20.0,0.0))
-#polygon.append(set[0] + APoint(20.0,20.0,0.0))
-#polygon.append(set[0] + APoint(20.0,-20.0,0.0))
-#polygon.append(set[0] + APoint(-20.0,-20.0,0.0))
-#mode = acad.acSelectionSetFence
-#ssetObj.SelectByPolygon(mode,polygon)
+print(ssetObj.__dict__)
+point_base = APoint(point_2)
+polygon = list()
+polygon.append(point_base + APoint(-20.0,20.0,0.0))
+polygon.append(point_base + APoint(20.0,20.0,0.0))
+polygon.append(point_base + APoint(20.0,-20.0,0.0))
+polygon.append(point_base + APoint(-20.0,-20.0,0.0))
+Points_list = list()
+index = 0
+for point in polygon:
+    Points_list.append(point[0])
+    Points_list.append(point[1])
+    Points_list.append(point[2])
+    index = index+3
+print(polygon[0])
+print(polygon[1])
+print(polygon[2])
+print(polygon[3])
+for point in Points_list: print(str(point))
+FilterType = array.array('h',[1])
+FilterData = ['Text']
+mode = ACAD.acSelectionSetCrossingPolygon
+print(mode)
+ssetObj.SelectByPolygon(mode,Points_list,FilterType,FilterData)
+#for obj in ssetObj:
+#    if(obj.ObjectName == 'AcDbText'):
+#        print ('Text')
+#ssetObj.Delete()
 
 #coord_points=list()
 #for obj in set:

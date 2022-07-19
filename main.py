@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import filedialog as fd
 from write_excel_cells import convert_file, bdi_ws_fill
 from CAD_drawing_open import coordinates_from_Autocad, save_in_excel_file
-
+from BDI_fill import test_function
 #main window
 root =Tk()
 root.title('kmz a excel')
@@ -43,18 +43,22 @@ button_path_picker.pack()
 print(label_file_picker.cget('text'))
 print(label_path_picker.cget('text'))
 
-button_convert = Button(main_labelframe,text="Convertir",command=lambda:convert_file(label_file_picker,label_path_picker))
-button_convert.pack(expand=True)
+result_picker_container = LabelFrame(main_labelframe,text='Elije donde quieres los resultados',pady=5,padx=5,width=120)
+result_picker_container.pack()
+button_convert = Button(result_picker_container,text="Convertir a planilla excel",command=lambda:convert_file(label_file_picker,label_path_picker))
+button_convert.grid(row=0,column=0)
+button_to_BDI_file = Button(result_picker_container,text="Convertir a planilla BDI",command=lambda: test_function())
+button_to_BDI_file.grid(row=0,column=1)
 
-def on_click_button_acad(excel_book_path):
-    if excel_book_path == 'Elegir directorio...': 
-        print('Elige directorio donde guardar resultados')
-        return
-    coord_list = coordinates_from_Autocad(21,False)
-    save_in_excel_file("ACAD_Output",excel_book_path,coord_list)
+#def on_click_button_acad(excel_book_path):
+#    if excel_book_path == 'Elegir directorio...': 
+#        print('Elige directorio donde guardar resultados')
+#        return
+#    coord_list = coordinates_from_Autocad(21,False)
+#    save_in_excel_file("ACAD_Output",excel_book_path,coord_list)
 
 
-button_convert_from_ACAD = Button(main_labelframe,text="Extraer desde ACAD",command=lambda:on_click_button_acad(label_path_picker.cget('text')))
-button_convert_from_ACAD.pack(expand=True)
+#button_convert_from_ACAD = Button(main_labelframe,text="Extraer desde ACAD",command=lambda:on_click_button_acad(label_path_picker.cget('text')))
+#button_convert_from_ACAD.pack(expand=True)
 root.mainloop()
 

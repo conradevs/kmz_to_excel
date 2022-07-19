@@ -14,7 +14,7 @@ def points_lines_shapes(mapping):
     for key in mapping:
         coord_str = mapping[key]['coordinates']
         coord_split = coord_str.split(',')
-        if 'LookAt' in mapping[key]: #points         
+        if 'LookAt' in mapping[key] or 'Camera' in mapping[key]:  #points         
             Points.append(Point(key,coord_split[0],coord_split[1],coord_split[2]))
         elif 'LineString' in mapping[key]: #lines
             coord_split = coord_str.split(' ')
