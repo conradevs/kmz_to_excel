@@ -47,7 +47,7 @@ result_picker_container = LabelFrame(main_labelframe,text='Elije donde quieres l
 result_picker_container.pack()
 button_convert = Button(result_picker_container,text="Convertir a planilla excel",command=lambda:convert_file(label_file_picker,label_path_picker))
 button_convert.grid(row=0,column=0)
-button_to_BDI_file = Button(result_picker_container,text="Convertir a planilla BDI",command=lambda: test_function())
+button_to_BDI_file = Button(result_picker_container,text="Convertir a planilla BDI",command=lambda: test_function(label_file_picker.cget('text'),label_path_picker.cget('text')))
 button_to_BDI_file.grid(row=0,column=1)
 
 #def on_click_button_acad(excel_book_path):
